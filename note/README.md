@@ -2279,5 +2279,27 @@ fn main() {
 }
 ```
 
+## 二十一、并发
+### 21.1 创建线程
+线程使用：
+```rust
+use std::{thread, time::Duration};
+
+fn main() {
+    let handler = thread::spawn(|| {
+        for i in 1..10 {
+            println!("hi number {} from the spawned thread!", i);
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+
+    for i in 1..5 {
+        println!("hi number {} from the main thread!", i);
+        thread::sleep(Duration::from_millis(1));
+    }
+
+    handler.join().unwrap() // 阻塞主线程等待子线程执行结束
+}
+```
 
 
