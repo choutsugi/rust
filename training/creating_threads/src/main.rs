@@ -1,17 +1,12 @@
-use std::{thread, time::Duration};
+use std::thread;
 
 fn main() {
-    let handler = thread::spawn(|| {
-        for i in 1..10 {
-            println!("hi number {} from the spawned thread!", i);
-            thread::sleep(Duration::from_millis(1));
-        }
-    });
+    let v = vec![1, 2, 3];
 
-    for i in 1..5 {
-        println!("hi number {} from the main thread!", i);
-        thread::sleep(Duration::from_millis(1));
-    }
+    // 移动vec所有权到子线程
+    let handler = thread::spawn(move || {
+        println!("Here's a vector: {:?}!", v);
+    });
 
     handler.join().unwrap() // 阻塞主线程等待子线程执行结束
 }
