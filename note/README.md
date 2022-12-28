@@ -2150,7 +2150,35 @@ fn main() {
     println!("count after c goes out of scope = {}", Rc::strong_count(&a)); // 当前引用计数：2
 }
 ```
+### 20.5 RefCell<T>与内部可变性模式
+使用示例：
+```rust
+use std::{cell::RefCell, rc::Rc};
 
+#[derive(Debug)]
+enum List {
+    // Rc：引用计数器
+    // RefCell：内部可变性
+    Cons(Rc<RefCell<i32>>, Rc<List>),
+    Nil,
+}
+
+use crate::List::{Cons, Nil};
+
+fn main() {
+    let value = Rc::new(RefCell::new(5));
+
+    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+    let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
+    let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
+
+    println!("value = {:#?}", value);
+
+    *value.borrow_mut() += 10;
+
+    println!("b = {:#?}\nc = {:#?}", b, c);
+}
+```
 
 
 
