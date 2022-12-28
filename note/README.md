@@ -2035,6 +2035,66 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
 略
 
 ## 二十、智能指针
+### 20.1 Box智能指针
+使用场景：
+```rust
+use List::{Cons, Nil};
+
+enum List {
+    Cons(i32, Box<List>), // 使用智能指针包裹（智能指针为固定大小）
+    Nil,
+}
+
+fn main() {
+    let _list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+}
+```
+
+### 20.2 Deref特征（解引用）
+使用场景：
+```rust
+use std::ops::Deref;
+
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+    fn new(x: T) -> MyBox<T> {
+        MyBox(x)
+    }
+}
+
+// 为MyBox实现Deref特征
+impl<T> Deref for MyBox<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+fn main() {
+    let x = 5;
+    let y = MyBox::new(x);
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+
+    let m = MyBox::new(String::from("Rust"));
+
+    let _t1: &MyBox<String> = &m;
+    let _t2: &String = _t1.deref(); // 解引用
+    let _t3: &str = _t2.deref(); // 解引用
+
+    hello(&(*m)[..]); // 手动解引用
+    hello(&m); // 自动解引用：&MyBox<String> -> &String -> &str
+}
+
+fn hello(name: &str) {
+    println!("Hello, {}!", name);
+}
+```
+
+
 
 
 
