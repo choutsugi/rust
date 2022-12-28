@@ -2179,8 +2179,47 @@ fn main() {
     println!("b = {:#?}\nc = {:#?}", b, c);
 }
 ```
+### 20.6 循环引用
+代码示例：
+```rust
+use crate::List::{Cons, Nil};
+use std::{cell::RefCell, rc::Rc};
 
+#[derive(Debug)]
+enum List {
+    Cons(i32, RefCell<Rc<List>>),
+    Nil,
+}
 
+impl List {
+    fn tail(&self) -> Option<&RefCell<Rc<List>>> {
+        match self {
+            Cons(_, item) => Some(item),
+            Nil => None,
+        }
+    }
+}
+
+fn main() {
+    let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
+    println!("a initial rc count = {}", Rc::strong_count(&a)); // a.rc = 1
+    println!("a next item = {:?}", a.tail());
+
+    let b = Rc::new(Cons(10, RefCell::new(Rc::clone(&a)))); // b 指向 a
+    println!("a rc count after b creation = {}", Rc::strong_count(&a)); // a.rc = 2
+    println!("b initial rc count = {}", Rc::strong_count(&b)); // b.rc = 1
+    println!("b next item = {:?}", b.tail());
+
+    if let Some(link) = a.tail() {
+        *link.borrow_mut() = Rc::clone(&b); // a 指向 b
+    }
+    println!("b rc count after changing a = {}", Rc::strong_count(&b));
+    println!("a rc count after changing a = {}", Rc::strong_count(&a));
+
+    // 循环引用：Stack Overflow
+    println!("a next item = {:?}", a.tail());
+}
+```
 
 
 
