@@ -1,4 +1,5 @@
-use std::{rc::Rc, sync::Arc, sync::Mutex, thread};
+// use std::rc::Rc;
+use std::{sync::Arc, sync::Mutex, thread};
 
 fn main() {
     // let counter = Rc::new(Mutex::new(0));
