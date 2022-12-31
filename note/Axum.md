@@ -171,4 +171,14 @@ Content-Type: application/x-www-form-urlencoded
 &name=Hello
 &age=30
 ```
-## 三、Axum中间件
+## 三、自动重启
+安装cargo watch：
+```bash
+cargo install cargo-watch
+```
+使用：
+```bash
+cargo watch -x run
+```
+
+

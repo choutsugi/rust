@@ -1,6 +1,4 @@
 use axum::{routing::get, Router};
-use std::net::SocketAddr;
-
 use tracing::Level;
 use tracing_subscriber::FmtSubscriber;
 
@@ -13,8 +11,7 @@ async fn main() {
 
     let app = Router::new().route("/", get(root));
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3001));
-    axum::Server::bind(&addr)
+    axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();
@@ -22,5 +19,5 @@ async fn main() {
 
 async fn root() -> String {
     tracing::info!("Hello, World!");
-    "Hello, World!".to_string()
+    "Hello, World!!!".to_owned()
 }
