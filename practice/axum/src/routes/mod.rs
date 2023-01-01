@@ -8,6 +8,7 @@ mod mirror_user_agent;
 mod path_variables;
 mod query_params;
 mod read_middleware_custom_header;
+mod returns_201;
 mod set_middleware_custom_header;
 
 use always_errors::always_errors;
@@ -27,6 +28,7 @@ use mirror_user_agent::mirror_user_agent;
 use path_variables::path_variables;
 use query_params::query_params;
 use read_middleware_custom_header::read_middleware_custom_header;
+use returns_201::returns_201;
 
 use self::set_middleware_custom_header::set_middleware_custom_header;
 
@@ -61,6 +63,7 @@ pub fn create_routes() -> Router<Body> {
         .route("/mirror_custom_header", get(mirror_custom_header))
         .route("/middleware_message", get(middleware_message))
         .route("/always_errors", get(always_errors))
+        .route("/returns_201", get(returns_201))
         .layer(cors)
         .layer(Extension(share_data))
 }
