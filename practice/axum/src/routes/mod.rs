@@ -1,3 +1,4 @@
+mod custom_header;
 mod mirror_body_json;
 mod mirror_body_string;
 mod path_variables;
@@ -10,6 +11,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use custom_header::custom_header;
 use mirror_body_json::mirror_body_json;
 use mirror_body_string::mirror_body_string;
 use path_variables::path_variables;
@@ -24,4 +26,5 @@ pub fn create_routes() -> Router<Body> {
         .route("/path_variables/:id", get(path_variables))
         .route("/query_params", get(query_params))
         .route("/standard_header_user_agent", get(standard_header))
+        .route("/custom_header", get(custom_header))
 }
